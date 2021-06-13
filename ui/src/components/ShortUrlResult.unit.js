@@ -12,8 +12,8 @@ describe('ShortUrlResult.vue', () => {
       }
     })
 
-    const input = wrapper.find('[data-test="longUrl"]')
-    expect(input.element.value).toBe(longUrl)
+    const link = wrapper.find('[data-test="longUrl"]')
+    expect(link.attributes('href')).toBe(longUrl)
   })
 
   it('displays the shortened URL', () => {
@@ -26,8 +26,8 @@ describe('ShortUrlResult.vue', () => {
       }
     })
 
-    const input = wrapper.find('[data-test="shortUrl"]')
-    expect(input.element.value).toBe(shortUrl)
+    const link = wrapper.find('[data-test="shortUrl"]')
+    expect(link.attributes('href')).toBe(shortUrl)
   })
 
   it('copies the short URL to the clipboard', async () => {

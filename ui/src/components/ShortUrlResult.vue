@@ -1,32 +1,36 @@
 <template>
   <div class="wrap">
-    <label for="longUrl">Original URL</label>
-    <input
-      id="longUrl"
-      data-test="longUrl"
-      type="text"
-      readonly
-      :value="longUrl"
-    />
+    <div class="link">
+      <label for="longUrl">Original URL</label>
+      <a
+        id="longUrl"
+        data-test="longUrl"
+        :href="longUrl"
+        target="_blank"
+      >
+        {{ longUrl }}
+      </a>
+    </div>
 
-    <label for="shortUrl">Short URL</label>
-    <div class="shortUrlWrap">
-      <input
+    <div class="link">
+      <label for="shortUrl">Short URL</label>
+      <a
         id="shortUrl"
         data-test="shortUrl"
-        type="text"
-        readonly
-        :value="shortUrl"
-      />
+        :href="shortUrl"
+        target="_blank"
+      >
+        {{ shortUrl }}
+      </a>
+    </div>
 
       <button
         data-test="copyBtn"
         type="submit"
         @click="copyShortUrl"
       >
-        Copy
+        Copy shortened URL
       </button>
-    </div>
   </div>
 </template>
 
@@ -78,22 +82,17 @@ export default {
   box-shadow: 3px 3px 8px #aaa;
   text-align: start;
 
-  input {
-    width: 100%;
-  }
-
-  > input {
-    margin-bottom: $space-md;
-  }
-
-  .shortUrlWrap {
+  .link {
     display: flex;
-    flex-wrap: nowrap;
-    width: 100%;
+    flex-direction: column;
 
-    > button {
-      margin-left: $space-sm;
+    &:first-of-type {
+      margin-bottom: $space-md;
     }
+  }
+
+  button {
+    margin-top: $space-md;
   }
 }
 </style>
