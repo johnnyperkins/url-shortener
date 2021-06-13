@@ -37,6 +37,8 @@ export default {
 
   methods: {
     async submit () {
+      if (!this.url) return
+
       this.isLoading = true
       this.error = null
 

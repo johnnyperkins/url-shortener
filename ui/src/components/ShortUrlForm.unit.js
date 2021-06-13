@@ -12,6 +12,20 @@ describe('ShortUrlForm.vue', () => {
     expect(submitSpy).toBeCalled()
   })
 
+  it('does not call api on submit if no URL input', async () => {
+    const urlInputValue = ''
+    const createShortUrlSpy = jest.spyOn(api, 'createShortUrl')
+
+    const wrapper = mount(ShortUrlForm)
+    const urlInput = wrapper.get('[data-test="urlInput"]')
+    const submitBtn = wrapper.get('[data-test="submitBtn"]')
+
+    await urlInput.setValue(urlInputValue)
+    await submitBtn.trigger('submit')
+
+    expect(createShortUrlSpy).toHaveBeenCalledTimes(0)
+  })
+
   it('correctly calls create url api on submit', async () => {
     const urlInputValue = 'http://www.testurl.com/some-long-url/mock'
     const createShortUrlSpy = jest.spyOn(api, 'createShortUrl')
@@ -53,7 +67,13 @@ describe('ShortUrlForm.vue', () => {
     jest.spyOn(api, 'createShortUrl')
       .mockRejectedValue(mockError)
 
-    const wrapper = mount(ShortUrlForm)
+    const wrapper = mount(ShortUrlForm, {
+      data() {
+        return {
+          url: 'exists'
+        }
+      }
+    })
     await wrapper.vm.submit()
 
     expect(wrapper.emitted().fail[0][0])
@@ -66,7 +86,13 @@ describe('ShortUrlForm.vue', () => {
     jest.spyOn(api, 'createShortUrl')
       .mockRejectedValue(mockError)
 
-    const wrapper = mount(ShortUrlForm)
+    const wrapper = mount(ShortUrlForm, {
+      data() {
+        return {
+          url: 'exists'
+        }
+      }
+    })
     await wrapper.vm.submit()
 
     expect(wrapper.text()).toContain(mockError.message)
