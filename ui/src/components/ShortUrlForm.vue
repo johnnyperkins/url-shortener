@@ -64,6 +64,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import '@/css/sizes.scss';
+
 .form {
   width: 100%;
 
@@ -76,7 +78,7 @@ export default {
     }
 
     > button {
-      margin-left: 8px;
+      margin-left: $space-sm;
     }
   }
 
