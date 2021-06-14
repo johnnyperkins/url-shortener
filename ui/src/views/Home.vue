@@ -12,11 +12,11 @@
     <short-url-form @success="onSubmitSucces" />
 
     <short-url-result
-      v-for="url in generatedUrls"
-      :key="url.shortUrl"
+      v-for="(longUrl, shortUrl) in generatedUrls"
+      :key="shortUrl"
       class="result"
-      :longUrl="url.longUrl"
-      :shortUrl="url.shortUrl"
+      :longUrl="longUrl"
+      :shortUrl="shortUrl"
     />
   </div>
 </template>
@@ -31,7 +31,7 @@ export default {
 
   data () {
     return {
-      generatedUrls: [],
+      generatedUrls: {},
       fetchUrlError: null,
       isLoading: false
     }
@@ -62,7 +62,7 @@ export default {
     },
 
     onSubmitSucces (generatedUrlResponse) {
-      this.generatedUrls.push(generatedUrlResponse)
+      this.generatedUrls[generatedUrlResponse.shortUrl] = generatedUrlResponse.longUrl
     }
   },
 
