@@ -9,7 +9,10 @@
       {{ fetchUrlError }}
     </p>
 
-    <short-url-form @success="onSubmitSucces" />
+    <short-url-form
+      @success="onSubmitSucces"
+      @fail="onSubmitFail"
+    />
 
     <short-url-result
       v-for="(longUrl, shortUrl) in generatedUrls"
@@ -62,6 +65,15 @@ export default {
 
     onSubmitSucces (generatedUrlResponse) {
       this.generatedUrls[generatedUrlResponse.shortUrl] = generatedUrlResponse.longUrl
+      this.clearFetchUrlError()
+    },
+
+    onSubmitFail () {
+      this.clearFetchUrlError()
+    },
+
+    clearFetchUrlError () {
+      this.fetchUrlError = null
     }
   },
 
