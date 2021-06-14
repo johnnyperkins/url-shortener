@@ -1,3 +1,9 @@
+const rootDomain = 'http://localhost:3000'
+const headers = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json'
+}
+
 /**
  * Creates a short url
  *
@@ -5,7 +11,19 @@
  * @returns {Promise<String>}
  */
 export const createShortUrl = async (url = '') => {
-  return `http://urlshortener.com/${Math.random()}`
+  const response = await fetch(`${rootDomain}/urls`, {
+    method: 'post',
+    body: JSON.stringify({ url }),
+    headers
+  })
+
+  if (response.ok) {
+    const responseJson = await response.json()
+    return responseJson
+  } else {
+    const errorText = await response.text()
+    throw new Error(errorText)
+  }
 }
 
 /**
@@ -15,5 +33,16 @@ export const createShortUrl = async (url = '') => {
  * @returns {Promise<String>}
  */
 export const getOriginalUrl = async (shortUrl = '') => {
-  return 'http://digitalgrandeur.com'
+  const response = await fetch(`${rootDomain}/urls/${shortUrl}`, {
+    method: 'get',
+    headers
+  })
+
+  if (response.ok) {
+    const responseText = await response.text()
+    return responseText
+  } else {
+    const errorText = await response.text()
+    throw new Error(errorText)
+  }
 }
