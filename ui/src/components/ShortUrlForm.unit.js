@@ -42,7 +42,10 @@ describe('ShortUrlForm.vue', () => {
 
   it('emits correct value on submit success', async () => {
     const urlInputValue = 'http://www.testurl.com/some-long-url/mock'
-    const mockCreateShortUrlResponse = 'http://urlshortener.com/1'
+    const mockCreateShortUrlResponse = {
+      shortUrl: 'http://urlshortener.com/1',
+      longUrl: urlInputValue
+    }
 
     jest.spyOn(api, 'createShortUrl')
       .mockImplementation(() => mockCreateShortUrlResponse)
@@ -55,10 +58,7 @@ describe('ShortUrlForm.vue', () => {
     await submitBtn.trigger('submit')
 
     expect(wrapper.emitted().success[0][0])
-      .toStrictEqual({
-        shortUrl: mockCreateShortUrlResponse,
-        longUrl: urlInputValue
-      })
+      .toStrictEqual(mockCreateShortUrlResponse)
   })
 
   it('emits error on submit failure', async () => {

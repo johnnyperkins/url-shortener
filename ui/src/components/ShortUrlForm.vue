@@ -43,11 +43,11 @@ export default {
       this.error = null
 
       try {
-        const shortUrl = await createShortUrl(this.url)
+        const { shortUrl, longUrl } = await createShortUrl(this.url)
 
         this.$emit('success', {
           shortUrl,
-          longUrl: this.url
+          longUrl
         })
 
         this.url = ''
