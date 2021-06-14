@@ -81,6 +81,7 @@ export default {
   padding: $space-md;
   box-shadow: 3px 3px 8px #aaa;
   text-align: start;
+  overflow-wrap: break-word;
 
   .link {
     display: flex;
