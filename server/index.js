@@ -30,6 +30,13 @@ redisClient.on('error', function(error) {
   console.error(error)
 })
 
+/**
+ * Creates a short url and saves to db
+ *
+ * Two entries are created:
+ * key: shortUrl, value: longUrl
+ * key: longUrl, value: shortUrl
+ */
 app.post('/urls', async (req, res) => {
   const longUrl = req.body.url
 
@@ -53,6 +60,9 @@ app.post('/urls', async (req, res) => {
   })
 })
 
+/**
+ * Returns the original url for a given shortened url
+ */
 app.get('/urls/:shortUrl', (req, res) => {
   const shortUrl = req.params.shortUrl
 
