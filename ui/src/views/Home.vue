@@ -52,7 +52,6 @@ export default {
         this.routeToUrl(originalUrl)
       } catch (error) {
         this.fetchUrlError = error.message
-      } finally {
         this.isLoading = false
       }
     },
