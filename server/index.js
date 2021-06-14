@@ -25,6 +25,22 @@ app.use(express.json())
  */
 const generateShortUrl = () => nanoid(11)
 
+/**
+ * Returns true if url is valid
+ *
+ * @param {string} url
+ * @returns {boolean}
+ */
+const isValidUrl = (url, max) => {
+  if (url.length > 2048) return false
+  try {
+    new URL(url)
+  } catch (e) {
+    return false
+  }
+  return true
+}
+
 redisClient.on('error', function(error) {
   // TODO log error
   console.error(error)
@@ -40,24 +56,28 @@ redisClient.on('error', function(error) {
 app.post('/urls', async (req, res) => {
   const longUrl = req.body.url
 
-  redisClient.get(`i-${longUrl}`, function(err, savedShortUrl) {
-    if (err) {
-      // TODO log error
-      res.status(500).send({
-        message: 'Server error',
-        error: err
-     })
-    } else if (savedShortUrl === null) {
-      // no short url created yet
-      const shortUrl = generateShortUrl()
-      redisClient.set(shortUrl, longUrl)
-      redisClient.set(`i-${longUrl}`, shortUrl)
-      res.send({ shortUrl, longUrl })
-    } else {
-      // short url already created
-      res.send({ shortUrl: savedShortUrl, longUrl })
-    }
-  })
+  if (isValidUrl(longUrl)){
+    redisClient.get(`i-${longUrl}`, function(err, savedShortUrl) {
+      if (err) {
+        // TODO log error
+        res.status(500).send({
+          message: 'Server error',
+          error: err
+       })
+      } else if (savedShortUrl === null) {
+        // no short url created yet
+        const shortUrl = generateShortUrl()
+        redisClient.set(shortUrl, longUrl)
+        redisClient.set(`i-${longUrl}`, shortUrl)
+        res.send({ shortUrl, longUrl })
+      } else {
+        // short url already created
+        res.send({ shortUrl: savedShortUrl, longUrl })
+      }
+    })
+  } else {
+    res.status(422).send('Invalid URL')
+  }
 })
 
 /**
