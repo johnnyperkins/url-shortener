@@ -26,16 +26,31 @@ app.use(express.json())
 const generateShortUrl = () => nanoid(11)
 
 redisClient.on('error', function(error) {
+  // TODO log error
   console.error(error)
 })
 
-app.post('/urls', (req, res) => {
+app.post('/urls', async (req, res) => {
   const longUrl = req.body.url
-  const shortUrl = generateShortUrl()
 
-  redisClient.set(shortUrl, url)
-
-  res.send({ shortUrl, longUrl })
+  redisClient.get(`i-${longUrl}`, function(err, savedShortUrl) {
+    if (err) {
+      // TODO log error
+      res.status(500).send({
+        message: 'Server error',
+        error: err
+     })
+    } else if (savedShortUrl === null) {
+      // no short url created yet
+      const shortUrl = generateShortUrl()
+      redisClient.set(shortUrl, longUrl)
+      redisClient.set(`i-${longUrl}`, shortUrl)
+      res.send({ shortUrl, longUrl })
+    } else {
+      // short url already created
+      res.send({ shortUrl: savedShortUrl, longUrl })
+    }
+  })
 })
 
 app.get('/urls/:shortUrl', (req, res) => {
@@ -43,6 +58,7 @@ app.get('/urls/:shortUrl', (req, res) => {
 
   redisClient.get(shortUrl, function(err, val) {
     if (err) {
+      // TODO log error
       res.status(500).send({
         message: 'Server error',
         error: err
